@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
                 ('job', models.CharField(max_length=100)),
-                ('avatar', models.ImageField(blank=True, null=True, upload_to=users.models.get_avatar_path_name)),
+                ('avatar', models.ImageField(blank=True, null=True, upload_to=users.models.get_avatar_path_or_delete_old)),
                 ('url', models.URLField(max_length=100)),
                 ('telegram', models.CharField(max_length=32)),
                 ('instagram', models.CharField(max_length=30)),
