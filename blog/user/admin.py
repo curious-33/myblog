@@ -1,14 +1,15 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from users.models import User
+from user.models import User
 
+@admin.register(User)
 class CustomUserAdmin(UserAdmin):
     list_display = ['username','job','last_login']
     fieldsets = ( 
         ('Authentication Info', 
                 {'fields': ('username','email','password')}), 
         ('Personal info', 
-                {'fields': ('first_name', 'last_name','job','avatar')}),
+                {'fields': ('first_name', 'last_name','job','about','avatar')}),
         ('Contact links', 
                 {'fields':('url','telegram','instagram','twitter')}),
         ('Important dates', 
@@ -18,4 +19,3 @@ class CustomUserAdmin(UserAdmin):
                                                         'user_permissions')}), 
                                                         )
 
-admin.site.register(User,CustomUserAdmin)

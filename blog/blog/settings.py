@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
 
-    'users.apps.UsersConfig',
+    'user.apps.UserConfig',
 ]
 
 MIDDLEWARE = [
@@ -75,7 +75,7 @@ DATABASES = {
 
         'USER': 'postgres',
 
-        'PASSWORD': 'root',
+        'PASSWORD': 'postgres',
 
         'HOST': 'localhost',
 
@@ -130,5 +130,9 @@ MEDIA_URL = '/media/'
 
 
 
-
-AUTH_USER_MODEL = 'users.User'
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
+AUTH_USER_MODEL = 'user.User'
