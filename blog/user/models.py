@@ -1,7 +1,9 @@
-from django.db import models
+import os
+
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-import os
+from django.db import models
+
 
 def get_avatar_path_or_delete_old(instance, filename):
     ext = instance.avatar.url.split('.')[-1]
