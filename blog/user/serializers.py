@@ -1,32 +1,76 @@
-from django.contrib.auth import authenticate, get_user_model
-from django.utils.translation import ugettext as _
-
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
+from rest_framework.validators import UniqueValidator
+from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.password_validation import validate_password
 
 
-class UserSerializer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=get_user_model().objects.all())]
+    )
+
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = get_user_model()
-        fields = ('first_name','email','username','password')
-        extra_kwargs = {'password': {'input_type':'password','write_only':True,'min_length': 8}}
-    
+        fields = ('username', 'password', 'password2', 'email', 'first_name', 'last_name')
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({'password': _("The two password fields didn't match.")})
+
+        return attrs
+
     def create(self, validated_data):
-        password = validated_data.pop('password')
-        user = super().create(validated_data)
-        user.set_password(password)
+        del validated_data['password2']
+        user = get_user_model().objects.create(**validated_data)
+
+        user.set_password(validated_data['password'])
         user.save()
+
         return user
 
 
-class AuthTokenSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField(style={"input_type":'password'})
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ('first_name','last_name','username','email','avatar','job','about','url','telegram','instagram','twitter')
+        extra_kwargs = {'avatar': {'read_only':True}}
 
-    def validate(self,attrs):
-        user = authenticate(**data)
-        if user and user.is_active:
-            attrs['user']=user
-            return attrs
-        msg = _("Unable to authenticate with provided credentials")
-        return serializers.ValidationError(msg,code='authentication')  
+class UserAvatarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ('avatar',)
+        model = get_user_model()
+        fields = ('first_name','last_name','username','email','avatar','job','about','url','telegram','instagram','twitter')
+
+class ChangePasswordSerializer(serializers.Serializer):
+    model = get_user_model()
+
+    old_password = serializers.CharField(required=True)
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
+    
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError(
+                _('Your old password was entered incorrectly. Please enter it again.')
+            )
+        return value
+
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError({'password': _("The two password fields didn't match.")})
+        validate_password(data['password'], self.context['request'].user)
+        return data
+
+    def save(self, **kwargs):
+        password = self.validated_data['password']
+        user = self.context['request'].user
+        user.set_password(password)
+        user.save()
+        return user

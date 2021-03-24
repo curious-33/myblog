@@ -5,7 +5,7 @@ import os
 
 def get_avatar_path_or_delete_old(instance, filename):
     ext = instance.avatar.url.split('.')[-1]
-    path = f"avatar/{instance.id}-{instance.username}.{ext}"
+    path = f"avatar/{instance.username}-{instance.id}.{ext}"
     base_dir = f"{settings.BASE_DIR}{settings.MEDIA_URL}{path}"
     #delete user's avatar If already exists
     if os.path.exists(base_dir):
@@ -15,7 +15,7 @@ def get_avatar_path_or_delete_old(instance, filename):
 
 class User(AbstractUser):
     job = models.CharField(max_length=255,blank=True)
-    about = models.TextField(max_length=500)
+    about = models.TextField(max_length=500,blank=True)
     avatar = models.ImageField(upload_to=get_avatar_path_or_delete_old,
                                 blank=True,null=True)
     url = models.URLField(max_length=120,blank=True)

@@ -4,8 +4,9 @@ from user import views
 app_name = 'user'
 
 urlpatterns = [
-    path('create/',views.CreateUserView.as_view(),name='create'),
-    path('token/',views.CreateTokenView.as_view(),name='token'),
-    path('', views.UserList.as_view()),
-    path('<int:pk>/', views.UserDetail.as_view()),
+    path('create/',views.RegisterView.as_view(),name='create'),
+    path('profile/',views.CurrentUserView.as_view(),name='profile'),
+    path('change-password/',views.ChangePasswordView.as_view(),name='change-password'),
+    path('<int:pk>/',views.UserInfoAPIView.as_view(),name='info'),
+    path('<int:pk>/avatar/',views.UserAvatarAPIView.as_view(),name='avatar'),
 ]

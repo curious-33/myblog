@@ -5,8 +5,8 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/',include('user.urls')),
-    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    path('api/token-auth/', obtain_auth_token, name='token_auth'),
+    path('api/users/',include('user.urls')),
 ]
 
 if settings.DEBUG:
