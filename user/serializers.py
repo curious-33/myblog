@@ -37,15 +37,17 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('first_name','last_name','username','email','avatar','job','about','url','telegram','instagram','twitter')
-        extra_kwargs = {'avatar': {'read_only':True}}
+        fields = (
+            'first_name', 'last_name', 'username', 'email', 'avatar', 'job', 'about', 'url', 'telegram', 'instagram',
+            'twitter')
+        extra_kwargs = {'avatar': {'read_only': True}}
+
 
 class UserAvatarSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('avatar',)
-        model = get_user_model()
-        fields = ('first_name','last_name','username','email','avatar','job','about','url','telegram','instagram','twitter')
+        fields = ('avatar', )
+
 
 class ChangePasswordSerializer(serializers.Serializer):
     model = get_user_model()
@@ -53,7 +55,7 @@ class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
-    
+
     def validate_old_password(self, value):
         user = self.context['request'].user
         if not user.check_password(value):
@@ -73,4 +75,4 @@ class ChangePasswordSerializer(serializers.Serializer):
         user = self.context['request'].user
         user.set_password(password)
         user.save()
-        return user
+        return userionError(msg, code='authentication')

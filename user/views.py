@@ -6,10 +6,10 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
-from user.serializers import (ChangePasswordSerializer, RegisterSerializer,
+from .serializers import (ChangePasswordSerializer, RegisterSerializer,
                               UserAvatarSerializer, UserInfoSerializer)
 
-from .permissions import IsOwnerOrReadOnly
+from .permissons import IsOwnerOrReadOnly
 
 
 class UsersApiRoot(APIView):
@@ -24,38 +24,46 @@ class UsersApiRoot(APIView):
             # "User info": reverse('user:user-info', request=request, format=format),
             # "Update user avatar": reverse('user:user-avatar', request=request, format=format),
             "Change password": reverse('user:change-password', request=request, format=format)
-            })
+        })
+
 
 class RegisterView(generics.CreateAPIView):
     queryset = get_user_model().objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
 
+
 class UserInfoAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserInfoSerializer
     queryset = get_user_model().objects.all()
     permission_classes = [IsOwnerOrReadOnly]
+
 
 class UserAvatarAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserAvatarSerializer
     queryset = get_user_model().objects.all()
     permission_classes = [IsOwnerOrReadOnly]
 
+
 class CurrentUserAvatarAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = UserAvatarSerializer
     queryset = get_user_model().objects.all()
     permission_classes = (IsAuthenticated,)
+
     def get(self, request):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
+
 
 class CurrentUserInfoView(generics.RetrieveUpdateAPIView):
     serializer_class = UserInfoSerializer
     queryset = get_user_model().objects.all()
     permission_classes = (IsAuthenticated,)
+
     def get(self, request):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
+
 
 class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer
@@ -64,7 +72,7 @@ class ChangePasswordView(generics.UpdateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        # if using drf authtoken, create a new token 
+        # if using drf authtoken, create a new token
         if hasattr(user, 'auth_token'):
             user.auth_token.delete()
         token, created = Token.objects.get_or_create(user=user)
