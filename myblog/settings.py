@@ -22,7 +22,6 @@ INSTALLED_APPS = [
     # 3rd part libraries
     'rest_framework',
     'rest_framework.authtoken',
-    'tinymce',
 
     # our apps
     'user.apps.UserConfig',
@@ -119,6 +118,4 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': "%Y-%m-%d - %H:%M:%S",
 }
 
-TINYMCE_JS_URL = os.path.join(STATIC_URL, "path/to/tiny_mce/tiny_mce.js")
-TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "path/to/tiny_mce")
 
