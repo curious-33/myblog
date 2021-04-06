@@ -1,9 +1,24 @@
-from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from datetime import datetime
+from django.contrib.auth import get_user_model
+from .models import Post
 
 
-class UserSerializer(serializers.ModelSerializer):
+class PostSerializer(serializers.ModelSerializer):
+    author = serializers.SerializerMethodField('get_user_model')
+
+    def get_author(self, obj):
+        request = self.context.get('request', None)
+        if request:
+            return request.user
+
     class Meta:
-        model = User
-        fields = ['url', 'username', 'email', 'groups']
+        model = Post
+        exclude = ('date_updated',)
+
+    def create(self, validated_data):
+        _Post = Post(
+            author=self.context['request'].user
+        )
+        _Post.save()
+        return _Post
+
