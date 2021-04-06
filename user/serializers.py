@@ -46,11 +46,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 class UserAvatarSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('avatar',)
-        model = get_user_model()
-        fields = (
-            'first_name', 'last_name', 'username', 'email', 'avatar', 'job', 'about', 'url', 'telegram', 'instagram',
-            'twitter')
+        fields = ('avatar', )
 
 
 class ChangePasswordSerializer(serializers.Serializer):
