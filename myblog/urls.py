@@ -4,6 +4,10 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+<<<<<<< HEAD:myblog/urls.py
+=======
+    path('tinymce/', include('tinymce.urls')),
+>>>>>>> origin/rasulovmuxtor:blog/blog/urls.py
     path('api-auth/', include('rest_framework.urls')),
     path('api/users/', include('user.urls')),
     path('api/', include('blog.urls'))

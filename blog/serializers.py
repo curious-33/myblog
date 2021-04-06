@@ -10,3 +10,4 @@ class PostSerializer(serializers.ModelSerializer):
         exclude = ('date_updated',)
 
 
+

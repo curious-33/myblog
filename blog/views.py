@@ -11,8 +11,7 @@ class PostListView(ListAPIView):
     serializer_class = PostSerializer
 
 
-class PostDetailView(        RetrieveAPIView,
-):
+class PostDetailView(RetrieveAPIView):
     queryset = Post.objects.all()
     lookup_field = 'pk'
     serializer_class = PostSerializer
