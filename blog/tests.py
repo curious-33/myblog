@@ -30,4 +30,4 @@ class PostTests(TestCase):
         }
         res = self.client.post(TOKEN, payload)
 
-        self.assertEqual()
+        self.assertEqual(res)

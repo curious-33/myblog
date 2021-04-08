@@ -22,8 +22,10 @@ INSTALLED_APPS = [
     # 3rd part libraries
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_yasg',
+    'ckeditor',
 
-    # our apps
+    # local
     'user.apps.UserConfig',
     'blog.apps.BlogConfig'
 ]
@@ -61,14 +63,7 @@ WSGI_APPLICATION = 'myblog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-
-        'PASSWORD': 'curious',
-
-        'HOST': 'localhost',
-
-        'PORT': '5432',
-
-        'NAME': os.path.join(BASE_DIR,'blog.sqlite3',)
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -109,9 +104,18 @@ MEDIA_URL = '/media/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'DATETIME_FORMAT': "%Y-%m-%d - %H:%M:%S",
+}
+
+CKEDITOR_CONFIGS = {
+    "default": {
+        "removePlugins": "stylesheetparser",
+    }
 }

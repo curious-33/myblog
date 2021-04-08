@@ -7,7 +7,8 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        exclude = ('date_updated',)
+        fields = '__all__'
+        read_only_fields = ('created_at', 'author')
 
 
 
