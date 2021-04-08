@@ -30,7 +30,14 @@ class UsersApiRoot(APIView):
 class RegisterView(generics.CreateAPIView):
     queryset = get_user_model().objects.all()
     serializer_class = RegisterSerializer
-    permission_classes = [AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        token, created = Token.objects.get_or_create(user=serializer.instance)
+        return Response({'token': token.key}, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class UserInfoAPIView(generics.RetrieveUpdateDestroyAPIView):
